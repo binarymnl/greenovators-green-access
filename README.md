@@ -54,12 +54,12 @@ greenovators/
 
 3. Endpoints available:
 
-   * `POST /api/tap` → simulate tap, return eco-points.
+   * `POST /api/access` → simulate tap, return eco-points.
    * `GET /api/dashboard/summary` → ESG KPIs mock.
    * `GET /api/forecast/occupancy` → mock occupancy.
    * `GET /api/recommendations` → action cards.
 
-4. DB layer: PostgreSQL schema (tables: `Users`, `Events`, `EcoPoints`) → can mock for hackathon.
+4. DB layer: SQL schema (tables: `Users`, `Events`, `EcoPoints`) → can mock for hackathon.
 
 ---
 
