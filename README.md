@@ -1,8 +1,18 @@
-🌱 Greenovators – Green Access Intelligence Platform
+Got it ✅
+Here’s a **README.md** you can drop into the root of your repo so every team member knows **exactly what to run for their part**.
 
-This repo contains the MVP hackathon project for the Greenovators team.
+---
+
+# 🌱 Greenovators – Green Access Intelligence Platform
+
+This repo contains the **MVP hackathon project** for the Greenovators team.
 It is organized by module so each team member can work independently but integrate smoothly.
 
+---
+
+## 📂 Repo Structure
+
+```
 greenovators/
 │
 ├── backend-dotnet/             # ASP.NET Core Web API (Jayesh)
@@ -12,198 +22,204 @@ greenovators/
 ├── devops/                     # Docker + CI/CD (Neer)
 ├── designer-assets/            # Mockups, logo, slides (Adarsh)
 └── README.md
+```
 
-👥 Team Roles & Setup Instructions
-🔹 Monil – Coordinator / Solution Architect
+---
 
-Oversee repo structure and integration.
+## 👥 Team Roles & Setup Instructions
 
-Help unblock devs.
+### 🔹 Monil – Coordinator / Solution Architect
 
-Validate presentation and demo flow.
+* Oversee repo structure and integration.
+* Help unblock devs.
+* Validate presentation and demo flow.
+* Can run backend & AI locally for quick testing (`dotnet run` and `uvicorn main:app`).
 
-Can run backend & AI locally for quick testing (dotnet run and uvicorn main:app).
+---
 
-🔹 Jayesh – Backend (.NET API)
+### 🔹 Jayesh – Backend (.NET API)
 
-📁 backend-dotnet/
+📁 `backend-dotnet/`
 
-Install .NET 7 SDK
-.
+1. Install [.NET 7 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0).
 
-Run API locally:
+2. Run API locally:
 
-cd backend-dotnet
-dotnet run
+   ```bash
+   cd backend-dotnet
+   dotnet run
+   ```
 
+   API will start at: `http://localhost:5000`
 
-API will start at: http://localhost:5000
+3. Endpoints available:
 
-Endpoints available:
+   * `POST /api/tap` → simulate tap, return eco-points.
+   * `GET /api/dashboard/summary` → ESG KPIs mock.
+   * `GET /api/forecast/occupancy` → mock occupancy.
+   * `GET /api/recommendations` → action cards.
 
-POST /api/tap → simulate tap, return eco-points.
+4. DB layer: PostgreSQL schema (tables: `Users`, `Events`, `EcoPoints`) → can mock for hackathon.
 
-GET /api/dashboard/summary → ESG KPIs mock.
+---
 
-GET /api/forecast/occupancy → mock occupancy.
+### 🔹 Muffeeze – AI/ML Service (FastAPI)
 
-GET /api/recommendations → action cards.
+📁 `ai-service/`
 
-DB layer: PostgreSQL schema (tables: Users, Events, EcoPoints) → can mock for hackathon.
+1. Install dependencies:
 
-🔹 Muffeeze – AI/ML Service (FastAPI)
+   ```bash
+   cd ai-service
+   pip install -r requirements.txt
+   ```
 
-📁 ai-service/
+2. Run service:
 
-Install dependencies:
+   ```bash
+   uvicorn main:app --reload --port 8001
+   ```
 
-cd ai-service
-pip install -r requirements.txt
+   Runs on `http://localhost:8001`
 
+3. Endpoints:
 
-Run service:
+   * `/forecast/occupancy` → returns hourly occupancy forecast.
+   * `/forecast/energy` → returns kWh forecast.
+   * `/forecast/pv` → sunny vs cloudy PV outputs.
 
-uvicorn main:app --reload --port 8001
+4. Goal: Later can connect with real CSV/IoT data. For hackathon, keep stub JSON working.
 
+---
 
-Runs on http://localhost:8001
+### 🔹 Janmesh – Dashboard (React)
 
-Endpoints:
+📁 `dashboard-frontend/`
 
-/forecast/occupancy → returns hourly occupancy forecast.
+1. Install Node.js (v18+).
 
-/forecast/energy → returns kWh forecast.
+2. Run dashboard locally:
 
-/forecast/pv → sunny vs cloudy PV outputs.
+   ```bash
+   cd dashboard-frontend
+   npm install
+   npm start
+   ```
 
-Goal: Later can connect with real CSV/IoT data. For hackathon, keep stub JSON working.
+   Opens at: `http://localhost:3000`
 
-🔹 Janmesh – Dashboard (React)
+3. Components to implement:
 
-📁 dashboard-frontend/
+   * **SummaryTiles.js** → kWh saved, CO₂ avoided, eco-points issued.
+   * **OccupancyChart.js** → show forecasted occupancy (use mock from `/forecast/occupancy`).
+   * **RecommendationsPanel.js** → live recommended actions (consume `/api/recommendations`).
 
-Install Node.js (v18+).
+---
 
-Run dashboard locally:
+### 🔹 Shubham – Mobile App (Flutter)
 
-cd dashboard-frontend
-npm install
-npm start
+📁 `mobile-app/`
 
+1. Install Flutter SDK.
 
-Opens at: http://localhost:3000
+2. Run app:
 
-Components to implement:
+   ```bash
+   cd mobile-app
+   flutter pub get
+   flutter run
+   ```
 
-SummaryTiles.js → kWh saved, CO₂ avoided, eco-points issued.
+3. Screens:
 
-OccupancyChart.js → show forecasted occupancy (use mock from /forecast/occupancy).
+   * **TapScreen.dart** → simulate tap & get eco-points.
+   * **WalletScreen.dart** → show eco-points balance.
+   * **RewardsScreen.dart** → show reward catalog.
 
-RecommendationsPanel.js → live recommended actions (consume /api/recommendations).
+4. Connect APIs:
 
-🔹 Shubham – Mobile App (Flutter)
+   * `POST /api/tap`
+   * `GET /api/users/{id}/points` (mock)
 
-📁 mobile-app/
+---
 
-Install Flutter SDK.
+### 🔹 Neer – DevOps
 
-Run app:
+📁 `devops/`
 
-cd mobile-app
-flutter pub get
-flutter run
+1. Setup `docker-compose.yml` to run:
 
+   * Backend (.NET API)
+   * AI Service (FastAPI)
+   * PostgreSQL DB
+2. Verify all services start with:
 
-Screens:
+   ```bash
+   docker-compose up
+   ```
+3. Ensure logging works for quick debugging.
+4. Optional: Setup GitHub Actions for CI/CD.
 
-TapScreen.dart → simulate tap & get eco-points.
+---
 
-WalletScreen.dart → show eco-points balance.
+### 🔹 Shweta – QA & Demo
 
-RewardsScreen.dart → show reward catalog.
+* Use **Postman collection** (`qa-tests/collection.json`) → import and test APIs.
+* Test mobile + dashboard flows manually.
+* Help prepare **demo rehearsal script**.
+* Act as backup speaker during presentation.
 
-Connect APIs:
+---
 
-POST /api/tap
+### 🔹 Adarsh – Designer
 
-GET /api/users/{id}/points (mock)
+📁 `designer-assets/`
 
-🔹 Neer – DevOps
+* Prepare **Figma mockups** (mobile + dashboard).
+* Design **presentation slides** with clear flow:
 
-📁 devops/
+  * Problem → Personas → Solution → Demo → Value.
+* Provide branding assets (logo, theme colors).
+* Act as critic to polish UI/UX.
 
-Setup docker-compose.yml to run:
+---
 
-Backend (.NET API)
+## 🚀 Run All Services (Local Demo)
 
-AI Service (FastAPI)
+1. Start backend (.NET):
 
-PostgreSQL DB
+   ```bash
+   cd backend-dotnet
+   dotnet run
+   ```
+2. Start AI service:
 
-Verify all services start with:
+   ```bash
+   cd ai-service
+   uvicorn main:app --reload --port 8001
+   ```
+3. Start dashboard:
 
-docker-compose up
+   ```bash
+   cd dashboard-frontend
+   npm start
+   ```
+4. Start mobile app:
 
+   ```bash
+   cd mobile-app
+   flutter run
+   ```
 
-Ensure logging works for quick debugging.
+---
 
-Optional: Setup GitHub Actions for CI/CD.
+## ✅ Hackathon MVP Scope
 
-🔹 Shweta – QA & Demo
+* Live **tap simulation** → eco-points update (mobile).
+* Dashboard → ESG KPIs + live recommendation card.
+* AI service → returns mock forecasts (occupancy, energy, PV).
+* Presentation + demo flow rehearsed.
 
-Use Postman collection (qa-tests/collection.json) → import and test APIs.
+---
 
-Test mobile + dashboard flows manually.
-
-Help prepare demo rehearsal script.
-
-Act as backup speaker during presentation.
-
-🔹 Adarsh – Designer
-
-📁 designer-assets/
-
-Prepare Figma mockups (mobile + dashboard).
-
-Design presentation slides with clear flow:
-
-Problem → Personas → Solution → Demo → Value.
-
-Provide branding assets (logo, theme colors).
-
-Act as critic to polish UI/UX.
-
-🚀 Run All Services (Local Demo)
-
-Start backend (.NET):
-
-cd backend-dotnet
-dotnet run
-
-
-Start AI service:
-
-cd ai-service
-uvicorn main:app --reload --port 8001
-
-
-Start dashboard:
-
-cd dashboard-frontend
-npm start
-
-
-Start mobile app:
-
-cd mobile-app
-flutter run
-
-✅ Hackathon MVP Scope
-
-Live tap simulation → eco-points update (mobile).
-
-Dashboard → ESG KPIs + live recommendation card.
-
-AI service → returns mock forecasts (occupancy, energy, PV).
-
-Presentation + demo flow rehearsed.
+Would you like me to also prepare a **one-page "Hackathon Quick Start Guide" (PDF)** from this README so your team can use it like a laminated cheat-sheet?
