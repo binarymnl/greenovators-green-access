@@ -6,16 +6,32 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>greenovators_service</RootNamespace>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <NoWarn>$(NoWarn);CS8618;CS8601</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.20" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+          <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9">
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+          <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
         <PackageReference Include="MQTTnet" Version="5.0.1.1416" />
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
         <PackageReference Include="Quartz" Version="3.15.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
         <PackageReference Include="System.Text.Json" Version="10.0.0-rc.1.25451.107" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Interface\" />
+      <Folder Include="Repository\" />
     </ItemGroup>
 
 </Project>
