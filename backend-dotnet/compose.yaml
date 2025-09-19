@@ -1,0 +1,7 @@
+﻿services:
+  greenovators-service:
+    image: greenovators-service
+    build:
+      context: .
+      dockerfile: backend-dotnet/greenovators-service/Dockerfile
+
