@@ -1,0 +1,36 @@
+# Visual Studio / .NET
+.vs/
+bin/
+obj/
+*.user
+*.suo
+
+# Node
+node_modules/
+dist/
+.env
+/build/
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Flutter
+build/
+.flutter-plugins
+.flutter-plugins-deps
+.packages
+.pub-cache/
+
+# Docker
+docker-compose.override.yml
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store
+
+# Replit
+.replit
