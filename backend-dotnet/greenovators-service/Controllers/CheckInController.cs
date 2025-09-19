@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using greenovators_service.Models.Data;
 using greenovators_service.Service;
 using Microsoft.AspNetCore.Authorization;
@@ -17,7 +18,10 @@ namespace greenovators_service.Controllers
         [HttpPost("checkin")]
         public IActionResult Checkin([FromBody] ZoneRequest req)
         {
-            var userId = User.FindFirst("sub")?.Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            
+            if (userId == null) return Unauthorized();
+
             _occupancy.RecordEvent(new CheckinEvent { UserId = userId, Zone = req.Zone, Action = EventType.Checkin });
             return Ok(new { message = "Checkin recorded" });
         }
@@ -26,7 +30,8 @@ namespace greenovators_service.Controllers
         [HttpPost("checkout")]
         public IActionResult Checkout([FromBody] ZoneRequest req)
         {
-            var userId = User.FindFirst("sub")?.Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null) return Unauthorized();
             _occupancy.RecordEvent(new CheckinEvent { UserId = userId, Zone = req.Zone, Action = EventType.Checkout });
             return Ok(new { message = "Checkout recorded" });
         }

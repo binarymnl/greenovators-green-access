@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using greenovators_service.Models.Data;
 using Microsoft.IdentityModel.Tokens;
@@ -28,7 +29,7 @@ namespace greenovators_service.Service
                 new Claim("username", user.Username)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("SuperSecretKey12345"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Mmbe8W3wduIUhBX2jDCREVWW0lu9zdnw"));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(

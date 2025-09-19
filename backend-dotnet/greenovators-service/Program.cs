@@ -32,14 +32,27 @@ builder.Services.AddAuthentication("Bearer")
             ValidIssuer = "green-ai",
             ValidAudience = "green-ai",
             IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
-                System.Text.Encoding.UTF8.GetBytes("SuperSecretKey12345"))
+                System.Text.Encoding.UTF8.GetBytes("Mmbe8W3wduIUhBX2jDCREVWW0lu9zdnw"))
         };
     });
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 
+// Add Swagger services
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+
 var app = builder.Build();
+
+// Configure the HTTP request pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 
 // Middleware
 app.UseAuthentication();
