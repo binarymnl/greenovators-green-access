@@ -19,24 +19,25 @@ builder.Services.AddScoped<OccupancyService>();
 // SignalR
 builder.Services.AddSignalR();
 
-// JWT Auth
-builder.Services.AddAuthentication("Bearer")
-    .AddJwtBearer("Bearer", options =>
-    {
-        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = "green-ai",
-            ValidAudience = "green-ai",
-            IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
-                System.Text.Encoding.UTF8.GetBytes("Mmbe8W3wduIUhBX2jDCREVWW0lu9zdnw"))
-        };
-    });
+// // JWT Auth
+// builder.Services.AddAuthentication("Bearer")
+//     .AddJwtBearer("Bearer", options =>
+//     {
+//         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+//         {
+//             ValidateIssuer = true,
+//             ValidateAudience = true,
+//             ValidateLifetime = true,
+//             ValidateIssuerSigningKey = true,
+//             ValidIssuer = "green-ai",
+//             ValidAudience = "green-ai",
+//             IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
+//                 System.Text.Encoding.UTF8.GetBytes("Mmbe8W3wduIUhBX2jDCREVWW0lu9zdnw"))
+//         };
+//     });
+//
+// builder.Services.AddAuthorization();
 
-builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 
 // Add Swagger services
@@ -53,10 +54,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
-// Middleware
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<DashboardHub>("/dashboardHub");

@@ -16,7 +16,8 @@ public class CheckinEvent
     [Required]
     public EventType Action { get; set; } 
 
-    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+    public DateTime CheckInTime { get; set; }
+    public DateTime? CheckOutTime { get; set; }
 }
 
 public enum EventType

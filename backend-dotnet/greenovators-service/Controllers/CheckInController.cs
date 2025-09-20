@@ -14,28 +14,20 @@ namespace greenovators_service.Controllers
 
         public CheckinController(OccupancyService occupancy) => _occupancy = occupancy;
 
-        [Authorize]
         [HttpPost("checkin")]
         public IActionResult Checkin([FromBody] ZoneRequest req)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            
-            if (userId == null) return Unauthorized();
-
-            _occupancy.RecordEvent(new CheckinEvent { UserId = userId, Zone = req.Zone, Action = EventType.Checkin });
+            _occupancy.RecordEvent(new CheckinEvent { UserId = req.userId.ToString(), Zone = "Gym", Action = EventType.Checkin, CheckInTime = req.CheckInTime});
             return Ok(new { message = "Checkin recorded" });
         }
 
-        [Authorize]
         [HttpPost("checkout")]
         public IActionResult Checkout([FromBody] ZoneRequest req)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null) return Unauthorized();
-            _occupancy.RecordEvent(new CheckinEvent { UserId = userId, Zone = req.Zone, Action = EventType.Checkout });
+            _occupancy.RecordEvent(new CheckinEvent { UserId = req.userId.ToString(), Zone = "Gym", Action = EventType.Checkout, CheckInTime = req.CheckInTime ,CheckOutTime = req.CheckOutTime});
             return Ok(new { message = "Checkout recorded" });
         }
 
-        public record ZoneRequest(string Zone);
+        public record ZoneRequest(Guid userId ,string Zone, DateTime CheckInTime, DateTime CheckOutTime);
     }
 }
