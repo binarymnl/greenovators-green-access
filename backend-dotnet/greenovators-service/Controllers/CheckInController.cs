@@ -1,7 +1,5 @@
-using System.Security.Claims;
 using greenovators_service.Models.Data;
 using greenovators_service.Service;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace greenovators_service.Controllers

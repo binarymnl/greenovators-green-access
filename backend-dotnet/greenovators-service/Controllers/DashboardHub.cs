@@ -4,9 +4,7 @@ namespace greenovators_service.Controllers
 {
     public class DashboardHub : Hub
     {
-        public async Task BroadcastUpdate(string message)
-        {
-            await Clients.All.SendAsync("ReceiveUpdate", message);
-        }
+        public Task SubscribeZone(string zone) => Groups.AddToGroupAsync(Context.ConnectionId, zone);
+        public Task UnsubscribeZone(string zone) => Groups.RemoveFromGroupAsync(Context.ConnectionId, zone);
     }
 }

@@ -1,68 +1,100 @@
+using Microsoft.EntityFrameworkCore;
+using Quartz;
 using greenovators_service.Controllers;
 using greenovators_service.Infrastructure;
+using greenovators_service.Job;
 using greenovators_service.Service;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+var config = builder.Configuration;
 
-// MySQL connection
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+// DbContext
+var conn = config.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDbContext>(opt => opt.UseMySql(conn, ServerVersion.AutoDetect(conn)));
+
+// HttpClients
+builder.Services.AddHttpClient("ai", c => {
+    var baseUrl = config["AiService:BaseUrl"] ?? "http://localhost:8000";
+    c.BaseAddress = new Uri(baseUrl);
+});
 
 // Services
-builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<IoTService>();
-builder.Services.AddScoped<ReportService>();
-builder.Services.AddScoped<OccupancyService>();
+builder.Services.AddScoped<AiService>();
+builder.Services.AddScoped<TelemetryIngestJob>(); // job injected via DI
+
+// Quartz
+builder.Services.AddQuartz(q =>
+{
+    var jobKey = new JobKey("TelemetryIngestJob");
+    q.AddJob<TelemetryIngestJob>(opts => opts.WithIdentity(jobKey));
+    q.AddTrigger(opts => opts.ForJob(jobKey).WithIdentity("TelemetryIngestJob-trigger")
+        .WithSimpleSchedule(x => x.WithIntervalInMinutes(int.Parse(config["Telemetry:IngestIntervalMinutes"] ?? "15")).RepeatForever()));
+});
+builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
 // SignalR
 builder.Services.AddSignalR();
 
 // // JWT Auth
-// builder.Services.AddAuthentication("Bearer")
-//     .AddJwtBearer("Bearer", options =>
+// var jwt = config.GetSection("Jwt");
+// var key = Encoding.UTF8.GetBytes(jwt["Key"]);
+// builder.Services.AddAuthentication(options =>
+// {
+//     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+// })
+// .AddJwtBearer(options =>
+// {
+//     options.RequireHttpsMetadata = false;
+//     options.SaveToken = true;
+//     options.TokenValidationParameters = new TokenValidationParameters
 //     {
-//         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-//         {
-//             ValidateIssuer = true,
-//             ValidateAudience = true,
-//             ValidateLifetime = true,
-//             ValidateIssuerSigningKey = true,
-//             ValidIssuer = "green-ai",
-//             ValidAudience = "green-ai",
-//             IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
-//                 System.Text.Encoding.UTF8.GetBytes("Mmbe8W3wduIUhBX2jDCREVWW0lu9zdnw"))
-//         };
-//     });
+//         ValidateIssuer = true,
+//         ValidateAudience = true,
+//         ValidateLifetime = true,
+//         ValidateIssuerSigningKey = true,
+//         ValidIssuer = jwt["Issuer"],
+//         ValidAudience = jwt["Audience"],
+//         IssuerSigningKey = new SymmetricSecurityKey(key)
+//     };
 //
-// builder.Services.AddAuthorization();
+//     // allow SignalR to receive access token via query string for web sockets
+//     options.Events = new JwtBearerEvents
+//     {
+//         OnMessageReceived = context =>
+//         {
+//             var accessToken = context.Request.Query["access_token"];
+//             var path = context.HttpContext.Request.Path;
+//             if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/dashboardHub")))
+//             {
+//                 context.Token = accessToken;
+//             }
+//             return Task.CompletedTask;
+//         }
+//     };
+// });
 
+// controllers
 builder.Services.AddControllers();
-
-// Add Swagger services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-
-app.MapControllers();
-app.MapHub<DashboardHub>("/dashboardHub");
-
-// Run migrations automatically (optional, dev only)
+// Auto-migrate (dev)
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
 }
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+app.MapHub<DashboardHub>("/dashboardHub");
 
 app.Run();
