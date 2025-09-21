@@ -85,5 +85,93 @@ namespace greenovators_service.Controllers
                 weather_impact = tempCorrelation == null ? "N/A" : $"Higher energy around {tempCorrelation.Temp}°C"
             });
         }
+        
+        [HttpGet("peak-hour")]
+        public async Task<IActionResult> PeakHour()
+        {
+            var lastWeek = DateTime.UtcNow.AddDays(-7);
+
+            var peak = await _db.FacilityEvents
+                .Where(e => e.Timestamp >= lastWeek && e.DoorAction == "entry")
+                .GroupBy(e => e.Timestamp.Hour)
+                .Select(g => new { Hour = g.Key, Visitors = g.Count() })
+                .OrderByDescending(x => x.Visitors)
+                .FirstOrDefaultAsync();
+
+            return Ok(new {
+                hour = peak == null ? null : $"{peak.Hour}:00",
+                visitors = peak?.Visitors ?? 0,
+                highlight = "Peak hour for gym usage last week"
+            });
+        }
+        
+        [HttpGet("best-day")]
+        public async Task<IActionResult> BestDay()
+        {
+            var lastMonth = DateTime.UtcNow.AddMonths(-1);
+
+            var day = await _db.FacilityEvents
+                .Where(e => e.Timestamp >= lastMonth && e.DoorAction == "entry")
+                .GroupBy(e => e.Timestamp.Date)
+                .Select(g => new { Day = g.Key, Visitors = g.Count() })
+                .OrderByDescending(x => x.Visitors)
+                .FirstOrDefaultAsync();
+
+            return Ok(new {
+                day = day?.Day.ToString("yyyy-MM-dd"),
+                visitors = day?.Visitors ?? 0,
+                message = "Day with highest visitor count in last month"
+            });
+        }
+
+        [HttpGet("dwell")]
+        public async Task<IActionResult> Dwell()
+        {
+            var lastMonth = DateTime.UtcNow.AddMonths(-1);
+
+            var avgDwell = await _db.FacilityEvents
+                .Where(e => e.Timestamp >= lastMonth && e.LockerDurationMin > 0)
+                .AverageAsync(e => e.LockerDurationMin);
+
+            var prevAvg = await _db.FacilityEvents
+                .Where(e => e.Timestamp < lastMonth && e.LockerDurationMin > 0)
+                .AverageAsync(e => e.LockerDurationMin);
+
+            var changePct = prevAvg > 0 ? ((avgDwell - prevAvg) / prevAvg) * 100 : 0;
+
+            return Ok(new {
+                avg_dwell_time_min = avgDwell.HasValue ? Math.Round(avgDwell.Value, 2) : 10,
+                change_pct = changePct.HasValue ? Math.Round(changePct.Value, 2) : 3
+            });
+        }
+        
+        [HttpGet("recommendations")]
+        public async Task<IActionResult> Recommendations()
+        {
+            var lastWeek = DateTime.UtcNow.AddDays(-7);
+
+            var avgVisitors = await _db.FacilityEvents
+                .Where(e => e.Timestamp >= lastWeek && e.DoorAction == "entry")
+                .GroupBy(e => e.Timestamp.Hour)
+                .Select(g => g.Count())
+                .AverageAsync();
+
+            var avgEnergy = await _db.FacilityEvents
+                .Where(e => e.Timestamp >= lastWeek)
+                .AverageAsync(e => e.EnergyKWh);
+
+            var recs = new List<object>();
+
+            if (avgVisitors > 50)
+                recs.Add(new { title = "Adjust Staffing", detail = "High average visitors, consider adding more staff at peak times" });
+
+            if (avgEnergy > 7)
+                recs.Add(new { title = "Energy Saving Opportunity", detail = "Energy usage above baseline, optimise HVAC and lighting" });
+
+            recs.Add(new { title = "Engagement", detail = "Offer special programs on low-attendance days to balance traffic" });
+
+            return Ok(recs);
+        }
+        
     }
 }

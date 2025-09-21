@@ -10,7 +10,7 @@ var config = builder.Configuration;
 
 // DbContext
 var conn = config.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AppDbContext>(opt => opt.UseMySql(conn, ServerVersion.AutoDetect(conn)));
+builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(conn));
 
 // HttpClients
 builder.Services.AddHttpClient("ai", c => {
@@ -78,6 +78,12 @@ builder.Services.AddSignalR();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<OccupancyService>();
+builder.Services.AddScoped<AiService>();
+builder.Services.AddScoped<IoTService>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<ReportService>();
 
 var app = builder.Build();
 

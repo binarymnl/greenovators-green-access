@@ -22,6 +22,15 @@ namespace greenovators_service.Controllers
                 .Select(g => new { g.Key.Day, g.Key.Hour, energy = g.Sum(x => x.EnergyKWh) })
                 .ToListAsync();
 
+            // Get all unique days in the dataset
+            var availableDays = grouped.Select(d => d.Day).Distinct().ToList();
+            
+            
+            // Pick a random day to treat as a holiday
+            var random = new Random();
+            var holidayDay = availableDays[random.Next(availableDays.Count)];
+
+            
             var weekday = grouped.Where(d => d.Day != DayOfWeek.Saturday && d.Day != DayOfWeek.Sunday)
                 .GroupBy(d => d.Hour)
                 .OrderBy(g => g.Key)
@@ -34,7 +43,29 @@ namespace greenovators_service.Controllers
                 .Select(g => Math.Round(g.Sum(x => x.energy), 2))
                 .ToArray();
 
-            return Ok(new { weekday, weekend, holiday = new double[24] });
+            // Extract energy consumption pattern for the randomly selected holiday
+            var holiday = grouped.Where(d => d.Day == holidayDay)
+                .GroupBy(d => d.Hour)
+                .OrderBy(g => g.Key)
+                .Select(g => Math.Round(g.Sum(x => x.energy), 2))
+                .ToArray();
+        
+            // If we don't have data for all hours (0-23), fill with zeros
+            if (holiday.Length < 24)
+            {
+                var fullHolidayData = new double[24];
+                var hourGroups = grouped.Where(d => d.Day == holidayDay)
+                    .GroupBy(d => d.Hour)
+                    .ToDictionary(g => g.Key, g => Math.Round(g.Sum(x => x.energy), 2));
+            
+                for (int hour = 0; hour < 24; hour++)
+                {
+                    fullHolidayData[hour] = hourGroups.ContainsKey(hour) ? hourGroups[hour] : 0;
+                }
+                holiday = fullHolidayData;
+            }
+
+            return Ok(new { weekday, weekend, holiday });
         }
     }
 }

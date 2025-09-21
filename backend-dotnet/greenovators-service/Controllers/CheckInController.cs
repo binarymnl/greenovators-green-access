@@ -23,7 +23,7 @@ namespace greenovators_service.Controllers
         public IActionResult Checkout([FromBody] ZoneRequest req)
         {
             _occupancy.RecordEvent(new CheckinEvent { UserId = req.userId.ToString(), Zone = "Gym", Action = EventType.Checkout, CheckInTime = req.CheckInTime ,CheckOutTime = req.CheckOutTime});
-            return Ok(new { message = "Checkout recorded" });
+            return Ok(new { message = "Checkout recorded", RewardPoints = 100 });
         }
 
         public record ZoneRequest(Guid userId ,string Zone, DateTime CheckInTime, DateTime CheckOutTime);

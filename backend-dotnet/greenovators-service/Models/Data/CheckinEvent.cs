@@ -18,6 +18,7 @@ public class CheckinEvent
 
     public DateTime CheckInTime { get; set; }
     public DateTime? CheckOutTime { get; set; }
+    public int? RewardPoints { get; set; }
 }
 
 public enum EventType
