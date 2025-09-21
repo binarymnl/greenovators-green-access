@@ -84,6 +84,8 @@ builder.Services.AddScoped<AiService>();
 builder.Services.AddScoped<IoTService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ReportService>();
+builder.Services.AddScoped<ForecastService>();
+builder.Services.AddScoped<SlotSuggestionService>();
 
 var app = builder.Build();
 

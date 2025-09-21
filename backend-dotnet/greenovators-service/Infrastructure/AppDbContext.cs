@@ -12,6 +12,8 @@ namespace greenovators_service.Infrastructure
         public DbSet<ReportEntry> ReportEntries { get; set; }
         public DbSet<FacilityEvent> FacilityEvents { get; set; }
         public DbSet<ActionItem> ActionItems { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<SuggestedSlot> SuggestedSlots { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

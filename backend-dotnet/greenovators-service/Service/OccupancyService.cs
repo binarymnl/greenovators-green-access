@@ -19,8 +19,18 @@ namespace greenovators_service.Service
 
         public void RecordEvent(CheckinEvent ev)
         {
-            _events.Add(ev);
+            // _events.Add(ev);
+            
             bool isDbCallRequired = false;
+
+            var customer = _dbContext.Customers.FirstOrDefault(x=>x.CustomerId == ev.UserId);
+
+            if (customer is null)
+            {
+                isDbCallRequired = true;
+                _dbContext.Customers.Add(new Customer {CustomerId = ev.UserId});
+            }
+            
             var entry = _dbContext.CheckinEvents.FirstOrDefault(x=>x.UserId == ev.UserId && x.Zone == ev.Zone);
             if (entry is not null && entry.Action == EventType.Checkin && ev.CheckOutTime.HasValue && ev.CheckOutTime.Value.Date == entry.CheckInTime.Date)
             {
@@ -28,6 +38,24 @@ namespace greenovators_service.Service
                 entry.CheckOutTime = ev.CheckOutTime;
                 entry.Action = EventType.Checkout;
                 _dbContext.CheckinEvents.Update(entry);
+                
+                // reward check
+                var todaySlot = _dbContext.SuggestedSlots
+                    .FirstOrDefault(s => s.UserId == ev.UserId && s.CreatedAt.Date == DateTime.UtcNow.Date);
+
+                if (todaySlot != null &&
+                    ev.CheckInTime.TimeOfDay >= todaySlot.SuggestedStart &&
+                    ev.CheckInTime.TimeOfDay <= todaySlot.SuggestedEnd)
+                {
+                    entry.RewardPoints = 10;
+                    customer = _dbContext.Customers.FirstOrDefault(u => u.CustomerId == ev.UserId);
+                    if (customer != null)
+                    {
+                        customer.RewardPoints += 10;
+                        _dbContext.Customers.Update(customer);
+                    }
+                   
+                }
             }
             else if (ev.Action == EventType.Checkin)
             {
