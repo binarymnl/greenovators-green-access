@@ -20,11 +20,12 @@ import { useSignalR } from "./Services/useSignalIr";
 function App() {
 
   const { data, connection } = useSignalR<string>({
-    url: "https://localhost:5001/notificationHub",
+    url: "https://localhost:7254/dashboardHub",
     method: "LightsON",
   });
 
   useEffect(() => {
+    console.log("yttt");
     if (!connection) return;
     const join = async () => {
       if (connection.state === "Connected") {
@@ -33,7 +34,7 @@ function App() {
       }
     };
     join();
-  }, [connection]);
+  }, [connection, data]);
 
   // const data = useSignalR({url:"https://swagger.domucloud.top/dashboardHub",method:"TelemetryUpdated",initialValue:""})
   // useEffect(()=>{

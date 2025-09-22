@@ -93,7 +93,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins("http://localhost:3000") // Your frontend URL
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
@@ -115,6 +116,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHub<DashboardHub>("/dashboardHub");
+app.MapHub<DashboardHub>("/dashboardHub").RequireCors("AllowFrontend");
 
 app.Run();
