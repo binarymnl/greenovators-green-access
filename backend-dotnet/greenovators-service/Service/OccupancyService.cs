@@ -1,5 +1,7 @@
-﻿using greenovators_service.Infrastructure;
+﻿using greenovators_service.Controllers;
+using greenovators_service.Infrastructure;
 using greenovators_service.Models.Data;
+using Microsoft.AspNetCore.SignalR;
 
 namespace greenovators_service.Service
 {
@@ -9,12 +11,14 @@ namespace greenovators_service.Service
         private readonly IoTService _iot;
         private readonly ReportService _report;
         private readonly AppDbContext _dbContext;
+        private readonly IHubContext<DashboardHub> _hub;
 
-        public OccupancyService(IoTService iot, ReportService report, AppDbContext dbContext)
+        public OccupancyService(IoTService iot, ReportService report, AppDbContext dbContext, IHubContext<DashboardHub> hub)
         {
             _iot = iot;
             _report = report;
             _dbContext = dbContext;
+            _hub = hub;
         }
 
         public async Task RecordEvent(CheckinEvent ev)
@@ -82,6 +86,7 @@ namespace greenovators_service.Service
             if (activeUsers != 0 && ev.Action == EventType.Checkin)
             {
                 await _iot.ControlDeviceAsync("d73412c1be89703fe6wcpr", true);
+                await _hub.Clients.All.SendAsync("LightsON", 1);
                 return;
             }
 
@@ -89,6 +94,7 @@ namespace greenovators_service.Service
             {
                 // trigger IoT event
                 await _iot.ControlDeviceAsync("d73412c1be89703fe6wcpr", false);
+                await _hub.Clients.All.SendAsync("LightsOff", 2);
                 
                 // update ESG report
                 _report.AddEnergySaved(ev.Zone, 1.4, 1.1);
