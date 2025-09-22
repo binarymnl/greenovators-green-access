@@ -17,10 +17,8 @@ namespace greenovators_service.Service
             _dbContext = dbContext;
         }
 
-        public void RecordEvent(CheckinEvent ev)
+        public async Task RecordEvent(CheckinEvent ev)
         {
-            // _events.Add(ev);
-            
             bool isDbCallRequired = false;
 
             var customer = _dbContext.Customers.FirstOrDefault(x=>x.CustomerId == ev.UserId);
@@ -32,12 +30,19 @@ namespace greenovators_service.Service
             }
             
             var entry = _dbContext.CheckinEvents.FirstOrDefault(x=>x.UserId == ev.UserId && x.Zone == ev.Zone);
-            if (entry is not null && entry.Action == EventType.Checkin && ev.CheckOutTime.HasValue && ev.CheckOutTime.Value.Date == entry.CheckInTime.Date)
+            
+            // Get the last entry for this user to check its type
+            var lastEntry = _dbContext.CheckinEvents
+                .Where(x => x.UserId == ev.UserId && x.Zone == ev.Zone)
+                .OrderByDescending(x => x.Id)
+                .FirstOrDefault();
+            
+            if (entry is not null && lastEntry is not null && lastEntry.Action == EventType.Checkin && ev.CheckOutTime.HasValue && ev.CheckOutTime.Value.Date == entry.CheckInTime.Date)
             {
                 isDbCallRequired = true;
-                entry.CheckOutTime = ev.CheckOutTime;
-                entry.Action = EventType.Checkout;
-                _dbContext.CheckinEvents.Update(entry);
+                lastEntry.CheckOutTime = ev.CheckOutTime;
+                lastEntry.Action = EventType.Checkout;
+                _dbContext.CheckinEvents.Update(lastEntry);
                 
                 // reward check
                 var todaySlot = _dbContext.SuggestedSlots
@@ -57,29 +62,37 @@ namespace greenovators_service.Service
                    
                 }
             }
-            else if (ev.Action == EventType.Checkin)
+            else if (ev.Action == EventType.Checkin && (lastEntry == null || lastEntry.Action == EventType.Checkout))
             {
+                // Only add a new checkin if there's no previous entry or the last entry was a checkout
                 isDbCallRequired = true;
                 _dbContext.CheckinEvents.Add(ev);
             }
             
-            if( isDbCallRequired ) _dbContext.SaveChanges();
+            if(isDbCallRequired) _dbContext.SaveChanges();
+            
+            var activeUsers = _dbContext.CheckinEvents
+                .Where(e => e.Zone == ev.Zone && e.CheckInTime.Date == DateTime.UtcNow.Date && e.Action == EventType.Checkin)
+                .GroupBy(e => e.UserId)
+                .Select(g => g.OrderByDescending(e => e.CheckInTime).First())
+                .Count(e => e.Action == EventType.Checkin);
 
-            // if (ev.Action == EventType.Checkout)
-            // {
-            //     var activeUsers = _events
-            //         .Where(e => e.Zone == ev.Zone)
-            //         .GroupBy(e => e.UserId)
-            //         .Select(g => g.OrderByDescending(e => e.CheckInTime).First())
-            //         .Count(e => e.Action == EventType.Checkin);
-            //
-            //     if (activeUsers != 0) return;
-            //
-            //     // trigger IoT event
-            //     _iot.LightsOff(ev.Zone);
-            //     // update ESG report
-            //     _report.AddEnergySaved(ev.Zone, 1.4, 1.1);
-            // }
+
+
+            if (activeUsers != 0 && ev.Action == EventType.Checkin)
+            {
+                await _iot.ControlDeviceAsync("d73412c1be89703fe6wcpr", true);
+                return;
+            }
+
+            if (activeUsers == 0 && ev.Action == EventType.Checkout)
+            {
+                // trigger IoT event
+                await _iot.ControlDeviceAsync("d73412c1be89703fe6wcpr", false);
+                
+                // update ESG report
+                _report.AddEnergySaved(ev.Zone, 1.4, 1.1);
+            }
         }
     }
 }

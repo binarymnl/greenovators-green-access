@@ -1,4 +1,8 @@
-﻿namespace greenovators_service.Service
+﻿using System.Security.Cryptography;
+using System.Text;
+using Newtonsoft.Json.Linq;
+
+namespace greenovators_service.Service
 {
     public class IoTService
     {

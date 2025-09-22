@@ -11,9 +11,9 @@ namespace greenovators_service.Controllers
         : ControllerBase
     {
         [HttpPost("checkin")]
-        public IActionResult Checkin([FromBody] ZoneRequest req)
+        public async Task<IActionResult> Checkin([FromBody] ZoneRequest req)
         {
-            occupancy.RecordEvent(new CheckinEvent
+            await occupancy.RecordEvent(new CheckinEvent
             {
                 UserId = req.userId.ToString(),
                 Zone = "Gym",
@@ -24,9 +24,9 @@ namespace greenovators_service.Controllers
         }
 
         [HttpPost("checkout")]
-        public IActionResult Checkout([FromBody] ZoneRequest req)
+        public async Task<IActionResult> Checkout([FromBody] ZoneRequest req)
         {
-            occupancy.RecordEvent(new CheckinEvent
+            await occupancy.RecordEvent(new CheckinEvent
             {
                 UserId = req.userId.ToString(),
                 Zone = "Gym",
@@ -36,7 +36,7 @@ namespace greenovators_service.Controllers
             });
 
             var user = db.Customers.FirstOrDefault(u => u.CustomerId.ToString() == req.userId.ToString());
-            return Ok(new { message = "Checkout recorded", RewardPoints = user?.RewardPoints ?? 0 });
+            return Ok(new { message = "Checkout recorded", RewardPoints =  10 });
         }
 
         [HttpGet("{userId}/suggested-slot")]

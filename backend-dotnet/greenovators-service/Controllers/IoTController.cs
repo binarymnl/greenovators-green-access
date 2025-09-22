@@ -4,10 +4,11 @@ using greenovators_service.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using greenovators_service.Service;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace greenovators_service.Controllers
 {
-    public class IoTController
+    public class IoTController : ControllerBase
     {
         private readonly IoTService _tuyaService;
 
