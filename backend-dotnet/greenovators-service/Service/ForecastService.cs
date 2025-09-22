@@ -34,7 +34,7 @@ namespace greenovators_service.Service
                 })
                 .ToList();
 
-            if (!energyHistory.Any())
+            if (!energyHistory.Any() || energyHistory.Count < 10)
             {
                 return new SuggestedSlot
                 {
@@ -46,14 +46,33 @@ namespace greenovators_service.Service
             }
 
             var data = _ml.Data.LoadFromEnumerable(energyHistory);
+            
+            int seriesLength = energyHistory.Count;
+
+            if (seriesLength < 10)
+            {
+                return new SuggestedSlot
+                {
+                    UserId = userId,
+                    SuggestedStart = new TimeSpan(10, 0, 0),
+                    SuggestedEnd = new TimeSpan(12, 0, 0),
+                    Reason = "Not enough data for ML model, using fallback heuristic"
+                };
+            }
+
+            // ✅ Calculate params safely
+            int windowSize = Math.Max(2, seriesLength / 4);          // small window
+            int trainSize  = Math.Max(windowSize * 2 + 1, seriesLength - 1);
+            int horizon    = Math.Min(24, seriesLength / 2);         // avoid asking for too much
 
             var forecastingPipeline = _ml.Forecasting.ForecastBySsa(
                 outputColumnName: "ForecastedEnergy",
                 inputColumnName: nameof(EnergyRecord.Energy_kWh),
-                windowSize: 24,
-                seriesLength: energyHistory.Count,
-                trainSize: energyHistory.Count,
-                horizon: 24);
+                windowSize: windowSize,
+                seriesLength: seriesLength,
+                trainSize: trainSize,
+                horizon: horizon);
+
 
             var model = forecastingPipeline.Fit(data);
             var forecastEngine = model.CreateTimeSeriesEngine<EnergyRecord, EnergyForecast>(_ml);

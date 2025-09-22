@@ -25,32 +25,30 @@ namespace greenovators_service.Job
             _db = db; _config = config; _hub = hub; _ai = ai; _logger = logger;
         }
 
-        public Task Execute(IJobExecutionContext context)
+        public async Task Execute(IJobExecutionContext context)
         {
-            return Task.CompletedTask;
-
-            // var csvPath = _config["Telemetry:CsvFilePath"];
-            // if (!string.IsNullOrEmpty(csvPath) && File.Exists(csvPath))
-            // {
-            //     await IngestFromCsv(csvPath);
-            // }
-            // else
-            // {
-            //     await GenerateSyntheticTelemetry();
-            // }
-            //
-            // // After inserting, for each zone run AI analysis and notify clients
-            // var zones = await _db.FacilityEvents.Select(e => e.Zone).Distinct().ToListAsync();
-            // foreach (var zone in zones)
-            // {
-            //     var aiResult = await _ai.AnalyzeLast7DaysAsync(zone);
-            //     // store AI result into ReportEntries or ActionItems if needed (not implemented)
-            //     await _hub.Clients.All.SendAsync("AiAnalysisUpdated", new { zone, ai = aiResult });
-            // }
-            //
-            // // Notify raw latest telemetry
-            // var latest = await _db.FacilityEvents.OrderByDescending(e => e.Timestamp).Take(10).ToListAsync();
-            // await _hub.Clients.All.SendAsync("TelemetryUpdated", latest);
+            var csvPath = _config["Telemetry:CsvFilePath"];
+            if (!string.IsNullOrEmpty(csvPath) && File.Exists(csvPath))
+            {
+                await IngestFromCsv(csvPath);
+            }
+            else
+            {
+                await GenerateSyntheticTelemetry();
+            }
+            
+            // After inserting, for each zone run AI analysis and notify clients
+            var zones = await _db.FacilityEvents.Select(e => e.Zone).Distinct().ToListAsync();
+            foreach (var zone in zones)
+            {
+                var aiResult = await _ai.AnalyzeLast7DaysAsync(zone);
+                // store AI result into ReportEntries or ActionItems if needed (not implemented)
+                await _hub.Clients.All.SendAsync("AiAnalysisUpdated", new { zone, ai = aiResult });
+            }
+            
+            // Notify raw latest telemetry
+            var latest = await _db.FacilityEvents.OrderByDescending(e => e.Timestamp).Take(10).ToListAsync();
+            await _hub.Clients.All.SendAsync("TelemetryUpdated", latest);
         }
 
         private async Task IngestFromCsv(string csvPath)

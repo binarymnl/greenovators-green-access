@@ -87,7 +87,19 @@ builder.Services.AddScoped<ReportService>();
 builder.Services.AddScoped<ForecastService>();
 builder.Services.AddScoped<SlotSuggestionService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") // Your frontend URL
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
+
+app.UseCors("AllowFrontend");
 
 // Auto-migrate (dev)
 using (var scope = app.Services.CreateScope())

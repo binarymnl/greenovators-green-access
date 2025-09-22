@@ -45,13 +45,16 @@ namespace greenovators_service.Controllers
         }
 
         [HttpGet("weekly")]
-        public async Task<IActionResult> Weekly([FromQuery] string zone = "GymHall")
+        public IActionResult Weekly([FromQuery] string zone = "GymHall")
         {
             var start = DateTime.UtcNow.AddDays(-7);
-            var data = await _db.FacilityEvents.Where(e => e.Timestamp >= start && e.Zone == zone)
+            var data =  _db.FacilityEvents
+                .Where(e => e.Timestamp >= start && e.Zone == zone)
+                .AsEnumerable() // switch to client-side
                 .GroupBy(e => e.Timestamp.DayOfWeek)
                 .Select(g => new { Day = g.Key, Visitors = g.Count(x => x.DoorAction == "entry") })
-                .ToListAsync();
+                .ToList();
+
 
             var weekly = data.Select(d => new {
                 day = d.Day.ToString(),

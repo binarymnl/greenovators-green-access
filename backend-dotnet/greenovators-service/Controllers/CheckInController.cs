@@ -43,12 +43,14 @@ namespace greenovators_service.Controllers
         public IActionResult SuggestedSlot(Guid userId)
         {
             var slot = slotService.GetOrGenerateSuggestion(userId.ToString());
+            
             return Ok(new {
                 slot.UserId,
-                Start = slot.SuggestedStart.ToString(@"hh\\:mm"),
-                End = slot.SuggestedEnd.ToString(@"hh\\:mm"),
+                Start = slot.SuggestedStart.ToString(@"hh\:mm"),
+                End = slot.SuggestedEnd.ToString(@"hh\:mm"),
                 slot.Reason
             });
+            
         }
 
         [HttpGet("{userId}/rewards")]

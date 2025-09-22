@@ -12,15 +12,17 @@ namespace greenovators_service.Controllers
         public ConsumptionController(AppDbContext db) { _db = db; }
 
         [HttpGet("pattern")]
-        public async Task<IActionResult> Pattern([FromQuery] string period = "week")
+        public IActionResult Pattern([FromQuery] string period = "week")
         {
             var start = period == "week" ? DateTime.UtcNow.AddDays(-7) : DateTime.UtcNow.AddMonths(-1);
 
-            var grouped = await _db.FacilityEvents
+            var grouped = _db.FacilityEvents
                 .Where(e => e.Timestamp >= start)
+                .AsEnumerable() // switch to client-side
                 .GroupBy(e => new { Day = e.Timestamp.DayOfWeek, Hour = e.Timestamp.Hour })
                 .Select(g => new { g.Key.Day, g.Key.Hour, energy = g.Sum(x => x.EnergyKWh) })
-                .ToListAsync();
+                .ToList();
+
 
             // Get all unique days in the dataset
             var availableDays = grouped.Select(d => d.Day).Distinct().ToList();
