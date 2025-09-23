@@ -19,7 +19,7 @@ import { useSignalR } from "./Services/useSignalIr";
 
 function App() {
 
-  const { data, connection } = useSignalR<string>({
+  const { connection } = useSignalR<string>({
     url: "https://localhost:5001/notificationHub",
     method: "LightsON",
   });

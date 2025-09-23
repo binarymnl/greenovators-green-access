@@ -7,7 +7,7 @@ import {
   Typography,
   type SelectChangeEvent,
 } from "@mui/material";
-import { useLocation } from "react-router-dom";
+
 
 interface PropertyHeaderProps {
   properties: string[];

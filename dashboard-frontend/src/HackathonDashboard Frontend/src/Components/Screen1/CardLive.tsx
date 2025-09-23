@@ -188,7 +188,7 @@
 //   );
 // }
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Chart as ChartJS,
   LineElement,
@@ -215,13 +215,13 @@ ChartJS.register(
 export default function EnergyGraph() {
   const [dataPoints, setDataPoints] = useState<number[]>([]);
   const [labels, setLabels] = useState<string[]>([]);
-  const [currentValue, setCurrentValue] = useState(0); // Starting watts
+  const [, setCurrentValue] = useState(0); // Starting watts
 
   const onValues = [0.1, 0.2, 0.3, 0.4];
   const offValues = [0.1, 0.2, 0.3, 0.4, 0.3, 0.2, 0.1, 0];
 
   const { data, connection } = useSignalR<number>({
-    url: "https://localhost:7254/dashboardHub",
+    url: "https://swagger.domucloud.top/dashboardHub",
     method: "Lights",
   });
 

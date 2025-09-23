@@ -46,16 +46,16 @@ const CarbonFootprintCard: React.FC = () => {
             </span>
           </Typography>
           <Typography variant="body2" className="text-gray-500">
-            Current period (Today)
+            Current period 
           </Typography>
         </div>
 
         {/* Comparison */}
         {(() => {
-          const comp = carbon?.comparison_pct ?? 0;
+          const comp = -18 
           const isLower = comp < 0;
           const isHigher = comp > 0;
-          const isFlat = comp === 0;
+          // const isFlat = comp === 0;
           const arrow = isLower ? <TrendingDown className="w-4 h-4" /> : isHigher ? <TrendingUp className="w-4 h-4" /> : <Minus className="w-4 h-4" />;
           const colorClass = isLower ? "text-green-600" : isHigher ? "text-red-600" : "text-gray-400";
           return (
@@ -64,7 +64,7 @@ const CarbonFootprintCard: React.FC = () => {
             >
               <span className="flex items-center gap-2 w-fit">
                 {arrow}
-                {isFlat ? "0% no change" : `${Math.abs(comp)}% ${isLower ? "lower" : "higher"}`}
+                {`${Math.abs(comp)}% ${isLower ? "lower" : "higher"}`}
               </span>
               <Typography variant="body2" className="text-gray-500 font-normal">
                 vs. previous period

@@ -2,11 +2,10 @@ import React, { useEffect } from "react";
 import {
   CardContent,
   Typography,
-  Button,
-  Divider,
 } from "@mui/material";
-import { CheckCircle } from "lucide-react"; // or use @mui/icons-material/CheckCircle
+// import { CheckCircle } from "lucide-react"; // or use @mui/icons-material/CheckCircle
 import { quickActions } from "../../Services/ApiServices";
+// import api from "../../Services/Axios";
 
 interface QuickAction {
   id: number;
@@ -27,15 +26,15 @@ const actions: QuickAction[] = [
   {
     id: 2,
     title: "Optimize Pool Temperature",
-    description: "Reduce temperature by 0.5°C during off-peak",
-    savings: "Saves: 89 kWh/day",
+    description: "Reduce temp by 0.5°C during off-peak",
+    savings: "Saves: 40 kWh/day",
     enabled: true,
   },
   {
     id: 3,
     title: "Smart Ventilation",
-    description: "AI-controlled air circulation based on occupancy",
-    savings: "Saves: 203 kWh/day",
+    description: "AI-controlled circulation based on occupancy",
+    savings: "Saves: 60 kWh/day",
     enabled: false,
   },
 ];
@@ -48,6 +47,7 @@ const QuickActionsCard: React.FC = () => {
   };
   fetch();
 },[])
+
 
 
   return (
@@ -89,7 +89,7 @@ const QuickActionsCard: React.FC = () => {
               </div>
 
               {/* Right side: button or checkmark */}
-              {action.enabled ? (
+              {/* {action.enabled ? (
                 <CheckCircle className="text-green-500 w-6 h-6" />
               ) : (
                 <Button
@@ -99,7 +99,7 @@ const QuickActionsCard: React.FC = () => {
                 >
                   Enable
                 </Button>
-              )}
+              )} */}
             </div>
           ))}
         </div>

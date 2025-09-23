@@ -55,6 +55,7 @@ import OpacityIcon from "@mui/icons-material/Opacity";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import SpaIcon from "@mui/icons-material/Spa";
 import { occupancyStatus, type OccupancyStatusResponse } from "../../Services/ApiServices";
+import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
 
 // ---------- Component ----------
 function Card2() {
@@ -99,7 +100,7 @@ function Card2() {
   const chartData = data ?? fallbackData;
 
   // fallback icons/colors if API doesn’t send them
-  const icons = [<OpacityIcon />, <DirectionsRunIcon />, <SpaIcon />];
+  const icons = [<HourglassEmptyIcon />,<DirectionsRunIcon />, <SpaIcon /> , <OpacityIcon />];
   const colors = ["#00BFA6", "#00BFA6", "#00BFA6"];
 
   return (

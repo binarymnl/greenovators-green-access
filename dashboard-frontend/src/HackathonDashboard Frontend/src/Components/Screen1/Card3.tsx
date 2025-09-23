@@ -4,7 +4,7 @@ import {
   Typography,
   Chip,
   Divider,
-  Button,
+  // Button,
 } from "@mui/material";
 import OpacityIcon from "@mui/icons-material/Opacity";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
@@ -46,21 +46,21 @@ const staticItems: MonitoringItem[] = [
   {
     id: 2,
     label: "EventHall",
-    icon: <DirectionsRunIcon />,
+    icon: <HourglassEmptyIcon />,
     status: "High",
     value: "234/546",
   },
   {
     id: 3,
-    label: "LockerRoom",
     icon: <SpaIcon />,
+    label: "LockerRoom",
     status: "Optimal",
     value: "234/546",
   },
   {
     id: 4,
     label: "GymHall",
-    icon: <HourglassEmptyIcon />,
+    icon: <DirectionsRunIcon />,
     status: "Optimal",
     value: "234/546",
   },

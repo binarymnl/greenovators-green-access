@@ -28,11 +28,11 @@ function Sidebar() {
       activeIcon: "Icons/people-active.svg",
       inactiveIcon: "Icons/People.svg",
     },
-    {
-      key: "/settings",
-      activeIcon: "Icons/setting-2.svg", // settings stays green always
-      inactiveIcon: "Icons/setting-2.svg",
-    },
+    // {
+    //   key: "/settings",
+    //   activeIcon: "Icons/setting-2.svg", // settings stays green always
+    //   inactiveIcon: "Icons/setting-2.svg",
+    // },
   ];
 
   return (

@@ -27,26 +27,33 @@ const Card4 = () => {
   //   { day: "Saturday", value: 398, max: 400, confidence: "90%", icon: "☀️" },
   //   { day: "Sunday", value: 365, max: 400, confidence: "87%", icon: "⛅" },
   // ];
+
+//   • Today: Predicted 50/100
+// • Tomorrow: 45/100
+// • Wed: 60/100
+// • Thu: 40/100
+// • Fri: 55/100
+// • Sat: 65/100
+// • Sun: 60/100
   let weekData:any[] = [];
   if(weeklyforecast !== undefined && weeklyforecast?.length > 0){
-    weekData = [
-      { day: "Today", value: weeklyforecast[0]?.visitors, max: 100, confidence: `${weeklyforecast[0]?.confidence*100}%`, icon: "☀️" },
-      { day: "Tomorrow", value: weeklyforecast[1]?.visitors, max: 100, confidence: `${weeklyforecast[1]?.confidence*100}%`, icon: "⛅" },
-      { day: "Wednesday", value: weeklyforecast[2]?.visitors, max: 100, confidence: `${weeklyforecast[2]?.confidence*100}%`, icon: "⛅" },
-      { day: "Thursday", value: weeklyforecast[3]?.visitors, max: 100, confidence: `${weeklyforecast[3]?.confidence*100}%`, icon: "🌧️" },
-      { day: "Friday", value: weeklyforecast[4]?.visitors, max: 100, confidence: `${weeklyforecast[4]?.confidence*100}%`, icon: "☀️" },
-      { day: "Saturday", value: weeklyforecast[5]?.visitors, max: 100, confidence: `${weeklyforecast[5]?.confidence*100}%`, icon: "☀️" },
-
-    ];
+      weekData = [
+    { day: "Today", value: 50, max: 100, confidence: "92%", icon: "☀️" },
+    { day: "Tomorrow", value: 60, max: 100, confidence: "88%", icon: "⛅" },
+    { day: "Thursday", value: 40, max: 100, confidence: "75%", icon: "🌧️" },
+    { day: "Friday", value: 55, max: 100, confidence: "85%", icon: "☀️" },
+    { day: "Saturday", value: 65, max: 100, confidence: "90%", icon: "☀️" },
+    { day: "Sunday", value: 60, max: 100, confidence: "87%", icon: "⛅" },
+    ]
   }
   else {
     weekData = [
-    // { day: "Today", value: 285, max: 400, confidence: "92%", icon: "☀️" },
-    // { day: "Tomorrow", value: 310, max: 400, confidence: "88%", icon: "⛅" },
-    // { day: "Thursday", value: 256, max: 400, confidence: "75%", icon: "🌧️" },
-    // { day: "Friday", value: 342, max: 400, confidence: "85%", icon: "☀️" },
-    // { day: "Saturday", value: 398, max: 400, confidence: "90%", icon: "☀️" },
-    // { day: "Sunday", value: 365, max: 400, confidence: "87%", icon: "⛅" },
+    { day: "Today", value: 50, max: 100, confidence: "92%", icon: "☀️" },
+    { day: "Tomorrow", value: 60, max: 100, confidence: "88%", icon: "⛅" },
+    { day: "Thursday", value: 40, max: 100, confidence: "75%", icon: "🌧️" },
+    { day: "Friday", value: 55, max: 100, confidence: "85%", icon: "☀️" },
+    { day: "Saturday", value: 65, max: 100, confidence: "90%", icon: "☀️" },
+    { day: "Sunday", value: 60, max: 100, confidence: "87%", icon: "⛅" },
     ]
   }
 
