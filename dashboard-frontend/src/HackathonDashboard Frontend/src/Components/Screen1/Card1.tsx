@@ -115,6 +115,7 @@ const QuickActionsCard: React.FC = () => {
           Manage utilities
         </Button> */}
       </CardContent>
+
     </div>
   );
 };

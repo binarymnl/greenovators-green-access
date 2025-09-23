@@ -5,7 +5,7 @@ import LinearProgress, {
 import { Box } from "@mui/material";
 
 const LinearProgressBar = ({ value, max, label, color, svg, subtext }: any) => {
-  const progress = value !== 0 && max !==0 ? (value / max) * 100 : 0;
+  const progress = (value / max) * 100 ;
  
   const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 10,
@@ -42,7 +42,7 @@ const LinearProgressBar = ({ value, max, label, color, svg, subtext }: any) => {
           </div>
         </div>
         <p className="">
-          {value}/{max}
+          {value}/{2000}
         </p>
       </div>
       <BorderLinearProgress variant="determinate" value={progress} />

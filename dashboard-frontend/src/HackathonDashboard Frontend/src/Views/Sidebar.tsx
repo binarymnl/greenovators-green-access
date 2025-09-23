@@ -41,7 +41,7 @@ function Sidebar() {
       <div className="bg-[#F3F4F3] h-[100vh] w-[6%] flex flex-col items-center">
         {/* Logo */}
         <div className="mt-15">
-          <img src="Icons/Vintia.svg" alt="Logo" />
+          <img src="Icons/Mainicons.png" className="h-[50px] w-[50px] mt-7" alt="Logo" />
         </div>
 
         {/* Menu */}

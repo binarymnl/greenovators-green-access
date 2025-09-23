@@ -3,6 +3,8 @@ import Card2 from "../Components/Screen1/Card2"
 import EnergyMonitoringCard from "../Components/Screen1/Card3"
 import EnergyOptimisationCard from "../Components/Screen1/CardBottom1"
 import CarbonFootprintCard from "../Components/Screen1/CardBottom2"
+import EnergyGraph from "../Components/Screen1/CardLive"
+
 
 
 function Dashboard() {
@@ -25,7 +27,11 @@ function Dashboard() {
       </div>
       <div className="flex flex-col flex-1/3 w-[100%]">
       <CarbonFootprintCard/>
+      
       </div>
+    </div>
+    <div className="w-full h-[500px] flex gap-2 rounded-[18px]">
+      <EnergyGraph/>
     </div>
     </div>
   )

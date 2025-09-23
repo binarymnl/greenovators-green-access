@@ -103,7 +103,7 @@ const EnergyMonitoringCard: React.FC = () => {
             (match.status ?? "").toString().toLowerCase() === "high"
               ? "High"
               : "Optimal";
-          const value = `${match.usage ?? 0}/${match.limit ?? 0}`;
+          const value = ` ${match.usage > 10000 ? Math.floor(Number(match.usage)/1000 ) : Math.floor(Number(match.usage)/100 )  ?? 0}/${match.status === "High" ? match.limit/2 : match.limit ?? 0}`;
           return { ...si, status: statusNormalized, value };
         });
 

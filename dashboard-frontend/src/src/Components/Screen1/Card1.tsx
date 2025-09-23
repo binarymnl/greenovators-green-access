@@ -115,8 +115,12 @@ const QuickActionsCard: React.FC = () => {
           Manage utilities
         </Button> */}
       </CardContent>
+
+
     </div>
   );
 };
 
 export default QuickActionsCard;
+
+//      import {useEffect, useRef, useState} from "react"; import {Line} from "react-chartjs-2"; import {Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement, Title, Tooltip, Legend, } from "chart.js"; import * as signalR from "@microsoft/signalr"; ChartJS.register( LineElement, CategoryScale, LinearScale, PointElement, Title, Tooltip, Legend ); export default function EnergyGraph() { const chartRef = useRef<any>(null); const [dataPoints, setDataPoints] = useState<number[]>([]); const [labels, setLabels] = useState<string[]>([]); const [currentValue, setCurrentValue] = useState(100); // starting watts useEffect(() => { // Create SignalR connection const connection = new signalR.HubConnectionBuilder() .withUrl("http://localhost:5000/energyHub") // adjust to your hub url .withAutomaticReconnect() .build(); connection.start().catch(err => console.error("SignalR connect error:", err)); // Event: Lights ON connection.on("lightsOn", () => { updateGraph("on"); }); // Event: Lights OFF connection.on("lightsOff", () => { updateGraph("off"); }); // Cleanup on unmount return () => { connection.stop(); }; }, [currentValue]); // Function to update chart values const updateGraph = (event: "on" | "off") => { let newValue = currentValue; // small controlled changes if (event === "on") { newValue = currentValue + (Math.random() * 3 + 1); // +1 to +4 watts } else { newValue = currentValue - (Math.random() * 3 + 1); // -1 to -4 watts } // keep values reasonable if (newValue < 50) newValue = 50; if (newValue > 200) newValue = 200; setCurrentValue(newValue); setDataPoints(prev => [...prev.slice(-19), newValue]); // keep last 20 points setLabels(prev => [...prev.slice(-19), new Date().toLocaleTimeString()]); }; const data = { labels, datasets: [ { label: "Energy Consumption (Watts)", data: dataPoints, borderColor: "rgba(75,192,192,1)", backgroundColor: "rgba(75,192,192,0.2)", fill: true, tension: 0.3, pointRadius: 2, }, ], }; const options = { responsive: true, animation: { duration: 300, }, scales: { y: { min: 50, max: 200, title: { display: true, text: "Watts" }, }, x: { ticks: { display: false }, }, }, }; return ( <div className="p-4"> <h2 className="text-lg font-semibold mb-2">Live Energy Consumption</h2> <Line ref={chartRef} data={data} options={options} /> </div> ); }

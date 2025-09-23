@@ -65,7 +65,7 @@ export function useSignalR<T = any>({ url, method, initialValue }: UseSignalROpt
       .build();
 
     setConnection(conn);
-
+    
     const startConnection = async () => {
       try {
         if (conn.state === signalR.HubConnectionState.Disconnected) {
@@ -78,7 +78,7 @@ export function useSignalR<T = any>({ url, method, initialValue }: UseSignalROpt
         });
       } catch (err) {
         console.error("❌ SignalR Connection Error:", err);
-        setTimeout(startConnection, 5000);
+        // setTimeout(startConnection, 5000);
       }
     };
 

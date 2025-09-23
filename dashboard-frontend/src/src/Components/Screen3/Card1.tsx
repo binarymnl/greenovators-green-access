@@ -65,10 +65,10 @@ const Card3 = () => {
     const labels:any[] = [] 
     const predictedVisitors:any[] = []
     
-    todayforecast.hourly.forEach((h:any) => {
+    todayforecast?.hourly?.forEach((h:any) => {
       labels.push(h.time.toString())
     })
-    todayforecast.hourly.forEach((h:any) => {
+    todayforecast?.hourly?.forEach((h:any) => {
       predictedVisitors.push(h.predicted_visitors)
     })
 

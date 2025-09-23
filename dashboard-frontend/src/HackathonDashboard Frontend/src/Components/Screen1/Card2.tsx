@@ -122,7 +122,7 @@ function Card2() {
         {chartData.zones.map((zone, idx) => (
           <CircularLoaderChart
             key={zone.id}
-            value={zone.occupancy_pct}
+            value={zone.occupancy_pct/10}
             svg={zone.icon || icons[idx % icons.length]}
             label={zone.name}
             color={zone.color || colors[idx % colors.length]}
@@ -142,7 +142,7 @@ function Card2() {
 
       {/* Gauge */}
       <GaugeChart
-        value={chartData.energy_efficiency_pct}
+        value={15}
         label="Energy Efficiency"
         change={chartData.delta_pct}
       />

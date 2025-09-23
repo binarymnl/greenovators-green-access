@@ -41,7 +41,7 @@ const Card2 = () => {
         <h3 className="text-lg font-semibold mb-2">CO₂ Reduction Impact & Goals</h3>
         <LinearProgressBar
           value={annualcarbon?.current ?? 0}
-          max={annualcarbon?.target ?? 0}
+          max={2000}
           label="Annual Reduction Goal"
           color="#000"
           svg={<span>🌍</span>}

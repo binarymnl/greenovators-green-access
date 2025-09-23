@@ -100,7 +100,7 @@ function Card2() {
 
   // fallback icons/colors if API doesn’t send them
   const icons = [<OpacityIcon />, <DirectionsRunIcon />, <SpaIcon />];
-  const colors = ["#00BFA6", "#FF7043", "#9575CD"];
+  const colors = ["#00BFA6", "#00BFA6", "#00BFA6"];
 
   return (
     <div className="bg-white rounded-2xl p-5 w-full h-full flex flex-col justify-between items-center">
@@ -122,7 +122,7 @@ function Card2() {
         {chartData.zones.map((zone, idx) => (
           <CircularLoaderChart
             key={zone.id}
-            value={zone.occupancy_pct}
+            value={zone.occupancy_pct/10}
             svg={zone.icon || icons[idx % icons.length]}
             label={zone.name}
             color={zone.color || colors[idx % colors.length]}

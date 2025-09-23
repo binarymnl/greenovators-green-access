@@ -95,6 +95,10 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
+        policy.WithOrigins("https://greenovator.domucloud.top") // Your frontend URL
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 

@@ -40,7 +40,7 @@ const CarbonFootprintCard: React.FC = () => {
         {/* Main metric */}
         <div>
           <Typography variant="h4" className="font-bold">
-            {carbon?.current ?? 0}{" "}
+            {(carbon?.current) ?? 0}{" "}
             <span className="text-lg font-normal text-gray-600">
               {carbon?.unit ?? "kg CO₂e"}
             </span>
@@ -81,11 +81,11 @@ const CarbonFootprintCard: React.FC = () => {
           <div className="flex items-center gap-2">
             <BorderLinearProgress
               variant="determinate"
-              value={carbon?.progress_pct ?? 0}
+              value={10}
               className="flex-1"
             />
             <Typography variant="body2" className="text-gray-800 font-medium">
-              {carbon?.progress_pct ?? 0}%
+              {10 }%
             </Typography>
           </div>
         </div>
