@@ -28,14 +28,14 @@ const Card4 = () => {
   //   { day: "Sunday", value: 365, max: 400, confidence: "87%", icon: "⛅" },
   // ];
   let weekData:any[] = [];
-  if(weeklyforecast !== undefined){
+  if(weeklyforecast !== undefined && weeklyforecast?.length > 0){
     weekData = [
-      { day: "Today", value: weeklyforecast[0].visitors, max: 100, confidence: `${weeklyforecast[0].confidence*100}%`, icon: "☀️" },
-      { day: "Tomorrow", value: weeklyforecast[1].visitors, max: 100, confidence: `${weeklyforecast[1].confidence*100}%`, icon: "⛅" },
-      { day: "Wednesday", value: weeklyforecast[2].visitors, max: 100, confidence: `${weeklyforecast[2].confidence*100}%`, icon: "⛅" },
-      { day: "Thursday", value: weeklyforecast[3].visitors, max: 100, confidence: `${weeklyforecast[3].confidence*100}%`, icon: "🌧️" },
-      { day: "Friday", value: weeklyforecast[4].visitors, max: 100, confidence: `${weeklyforecast[4].confidence*100}%`, icon: "☀️" },
-      { day: "Saturday", value: weeklyforecast[5].visitors, max: 100, confidence: `${weeklyforecast[5].confidence*100}%`, icon: "☀️" },
+      { day: "Today", value: weeklyforecast[0]?.visitors, max: 100, confidence: `${weeklyforecast[0]?.confidence*100}%`, icon: "☀️" },
+      { day: "Tomorrow", value: weeklyforecast[1]?.visitors, max: 100, confidence: `${weeklyforecast[1]?.confidence*100}%`, icon: "⛅" },
+      { day: "Wednesday", value: weeklyforecast[2]?.visitors, max: 100, confidence: `${weeklyforecast[2]?.confidence*100}%`, icon: "⛅" },
+      { day: "Thursday", value: weeklyforecast[3]?.visitors, max: 100, confidence: `${weeklyforecast[3]?.confidence*100}%`, icon: "🌧️" },
+      { day: "Friday", value: weeklyforecast[4]?.visitors, max: 100, confidence: `${weeklyforecast[4]?.confidence*100}%`, icon: "☀️" },
+      { day: "Saturday", value: weeklyforecast[5]?.visitors, max: 100, confidence: `${weeklyforecast[5]?.confidence*100}%`, icon: "☀️" },
 
     ];
   }

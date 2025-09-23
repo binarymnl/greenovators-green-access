@@ -100,7 +100,7 @@ function Card2() {
 
   // fallback icons/colors if API doesn’t send them
   const icons = [<OpacityIcon />, <DirectionsRunIcon />, <SpaIcon />];
-  const colors = ["#00BFA6", "#FF7043", "#9575CD"];
+  const colors = ["#00BFA6", "#00BFA6", "#00BFA6"];
 
   return (
     <div className="bg-white rounded-2xl p-5 w-full h-full flex flex-col justify-between items-center">
