@@ -14,11 +14,12 @@ namespace greenovators_service.Infrastructure
         public DbSet<ActionItem> ActionItems { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<SuggestedSlot> SuggestedSlots { get; set; }
+        public DbSet<Recommendation> Recommendations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+        
             // Seed demo user
             // var demoUser = new User
             // {
@@ -34,6 +35,15 @@ namespace greenovators_service.Infrastructure
             //     new ActionItem { Id = 2, Key = "pool-temp", Title = "Optimize Pool Temperature", Description = "Optimize pool temp off-peak", SavingsKwhPerDay = 25, Enabled = false },
             //     new ActionItem { Id = 3, Key = "smart-vent", Title = "Smart Ventilation", Description = "Vent based on CO2", SavingsKwhPerDay = 40, Enabled = false }
             // );
+            
+            modelBuilder.Entity<Recommendation>(entity =>
+            {
+                entity.ToTable("recommendations");  // Table name
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Suggestion)
+                    .IsRequired()
+                    .HasColumnType("TEXT"); // or "nvarchar(max)" in SQL Server
+            });
         }
     }
 }
