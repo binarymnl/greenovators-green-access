@@ -13,15 +13,8 @@ namespace greenovators_service.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Get() {
-            var actions = await _db.ActionItems.ToListAsync();
-            var resp = actions.Select(a => new {
-                id = a.Key,
-                title = a.Title,
-                description = a.Description,
-                savings_kwh_per_day = a.SavingsKwhPerDay,
-                status = a.Enabled ? "enabled" : "disabled"
-            });
-            return Ok(resp);
+            var actions = await _db.Recommendations.Select(x=>x.Suggestion).ToListAsync();
+            return Ok(actions);
         }
 
         [HttpPost("{key}/enable")]
